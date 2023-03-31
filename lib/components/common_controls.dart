@@ -439,7 +439,7 @@ Widget csTextField(
       Color labelColor = const Color(Consts.C_LABELCOLOR),
       Color textColor = const Color(Consts.C_BLACKCOLOR),
       Color errorColor = const Color(Consts.C_ERRORTEXTCOLOR),
-      Color iconColor = const Color(Consts.C_BLACKCOLOR),
+      Color iconColor = const Color(Consts.C_SECUNDARYCOLOR),
       double iconSize =  24,
       double textFontSize = 14,
       double anglePrefixIcon = 0,

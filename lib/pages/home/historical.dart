@@ -11,17 +11,16 @@ import '../../models/policy.dart';
 import '../../res/i_font_res.dart';
 import '../../services/app_exception.dart';
 import '../../utils/constants.dart';
-import 'insured_objects.dart';
 
 
-class PoliciesPage extends StatefulWidget {
-  const PoliciesPage({Key? key}) : super(key: key);
+class HistoricalPage extends StatefulWidget {
+  const HistoricalPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _StatePoliciesPage();
+  State<StatefulWidget> createState() => _StateHistoricalPage();
 }
 
-class _StatePoliciesPage extends State<PoliciesPage> {
+class _StateHistoricalPage extends State<HistoricalPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   TextEditingController? _searchQuery;
@@ -46,9 +45,9 @@ class _StatePoliciesPage extends State<PoliciesPage> {
           print('At the top');
           listPolicies(paginated: false);
         } else {
-            if (!_policiesController.allLoaded.value) {
-              listPolicies(paginated: true);
-            }
+          if (!_policiesController.allLoaded.value) {
+            listPolicies(paginated: true);
+          }
         }
       }
     });
@@ -64,10 +63,6 @@ class _StatePoliciesPage extends State<PoliciesPage> {
     try {
       setState(() {_loadingOverlay = true;});
       await _policiesController.listPolicies (paginated: paginated);
-      // aqui
-      if (_policiesController.policies.isNotEmpty) {
-        _policiesController.policies.removeWhere((element) => element.state == "closed");
-      }
     } on BadRequestException catch (e) {
       csDialog(context: context, text: e.message,
           buttons: [
@@ -158,15 +153,15 @@ class _StatePoliciesPage extends State<PoliciesPage> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Container(
-                width: radius,
-                height: height,
-                decoration: BoxDecoration(
-                   color: _getColorType(policy.state),
-                   borderRadius: borderRadius,
-               ),
-             ),
-             Expanded(
+            Container(
+              width: radius,
+              height: height,
+              decoration: BoxDecoration(
+                color: _getColorType(policy.state),
+                borderRadius: borderRadius,
+              ),
+            ),
+            Expanded(
               child: Container(
                 padding: const EdgeInsets.only(left: 10, top: 4, right: 10),
                 height: height,
@@ -281,8 +276,8 @@ class _StatePoliciesPage extends State<PoliciesPage> {
         ),
       ),
       onTap: () {
-        Navigator.push(context, SlideRightRoute(page: InsuredObjectsPage(policy: policy,),
-            routeSettings: const RouteSettings(name: "PolicyDetailPage")));
+        /*Navigator.push(context, SlideRightRoute(page: PolicyDetailPage(policy: policy,),
+            routeSettings: const RouteSettings(name: "PolicyDetailPage")));*/
       },
     );
   }
@@ -290,22 +285,22 @@ class _StatePoliciesPage extends State<PoliciesPage> {
   Widget _buildTitle(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: Text("mypolicies".tr, textAlign: TextAlign.center,
+      child: Text("policyhistory".tr, textAlign: TextAlign.center,
         style: Theme.of(Consts.navState.currentContext!).textTheme.headline2!.copyWith(color: const Color(Consts.C_WHITECOLOR)),
       ),
     );
   }
 
   List<Widget> _buildActions() {
-      return <Widget>[
-        IconButton(
-          icon: const Icon(
-            FlutterRemix.notification_2_line,
-            color: Color(Consts.C_WHITECOLOR),
-          ),
-          onPressed: () {},
+    return <Widget>[
+      IconButton(
+        icon: const Icon(
+          FlutterRemix.notification_2_line,
+          color: Color(Consts.C_WHITECOLOR),
         ),
-      ];
+        onPressed: () {},
+      ),
+    ];
   }
 
   @override
@@ -325,66 +320,66 @@ class _StatePoliciesPage extends State<PoliciesPage> {
         ),
         //drawer: buildDrawer(context),
         body: GetBuilder<PoliciesController>(
-          builder: (context) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 10,),
-                  if (_policiesController.policies.isNotEmpty)
-                  csSearch(
-                    controller: _searchQuery,
-                    label: '',
-                    hintText: "search".tr,
-                    height: 54,
-                    width: 350,
-                    searching: _isSearching,
-                    onChanged: (String text) {
-                      if (_isSearching) {
-                        if (_searchQuery!.text.isNotEmpty) {
-                          setState(() {
-                            _startSearch();
-                          });
-                        } else {
-                          setState(() {
-                            _isSearching = false;
-                            _stopSearching();
-                          });
-                        }
-                      }
-                    },
-                    onPressed: () {
-                      setState(() {
-                        _isSearching = ! _isSearching;
-                      });
-                      if (_isSearching) {
-                        _startSearch();
-                      } else {
-                        _stopSearching();
-                      }
-                    }
-                  ),
-                  const SizedBox(height: 10,),
-                  if (_policiesController.policies.isNotEmpty)
-                    Expanded(
-                      child: ListView.builder(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        controller: _scrollController,
-                        shrinkWrap: true,
-                        itemCount: _policiesController.policies.length,
-                        itemBuilder: (context, index) {
-                          return _drawCard(_policiesController.policies[index]);
-                        },
+            builder: (context) {
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: <Widget>[
+                    const SizedBox(height: 10,),
+                    if (_policiesController.policies.isNotEmpty)
+                      csSearch(
+                          controller: _searchQuery,
+                          label: '',
+                          hintText: "search".tr,
+                          height: 54,
+                          width: 350,
+                          searching: _isSearching,
+                          onChanged: (String text) {
+                            if (_isSearching) {
+                              if (_searchQuery!.text.isNotEmpty) {
+                                setState(() {
+                                  _startSearch();
+                                });
+                              } else {
+                                setState(() {
+                                  _isSearching = false;
+                                  _stopSearching();
+                                });
+                              }
+                            }
+                          },
+                          onPressed: () {
+                            setState(() {
+                              _isSearching = ! _isSearching;
+                            });
+                            if (_isSearching) {
+                              _startSearch();
+                            } else {
+                              _stopSearching();
+                            }
+                          }
                       ),
-                    ),
-                  if (_policiesController.policies.isEmpty && !_policiesController.loading.value)
-                    Center(
-                      child: csEmptyList("noitems".tr),
-                    ),
-                ],
-              ),
-            );
-          }
+                    const SizedBox(height: 10,),
+                    if (_policiesController.policies.isNotEmpty)
+                      Expanded(
+                        child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          controller: _scrollController,
+                          shrinkWrap: true,
+                          itemCount: _policiesController.policies.length,
+                          itemBuilder: (context, index) {
+                            return _drawCard(_policiesController.policies[index]);
+                          },
+                        ),
+                      ),
+                    if (_policiesController.policies.isEmpty && !_policiesController.loading.value)
+                      Center(
+                        child: csEmptyList("noitems".tr),
+                      ),
+                  ],
+                ),
+              );
+            }
         ),
       ),
     );

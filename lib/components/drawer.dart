@@ -115,7 +115,7 @@ Widget buildDrawer(BuildContext context) {
                 ),
               ),
               const SizedBox(height: 10,),
-              Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              Padding(padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: FittedBox(
                 fit: BoxFit.fitWidth,
                 child: Text(_userController.getUserDescription(), textAlign: TextAlign.center,

@@ -34,6 +34,13 @@ class PoliciesController extends GetxController {
     var decoded = json.decode(response);
     var list = decoded['results'] as List;
     List<INSSPolicy> policies = list.map((policy) => INSSPolicy.fromJson(policy)).toList();
+    // Quitar
+    policies[0].policy_number = "00011";
+    INSSPolicy tmp = INSSPolicy.from(policies[0]);
+    tmp.state = "closed";
+    tmp.contractor_name = "Jorge Luis Arango Labrada";
+    tmp.policy_number = "00012";
+    policies.add(tmp);
     allLoaded.value = policies.length < pageSize + 1;
     save(policies, paginated);
     // loading.value = false;

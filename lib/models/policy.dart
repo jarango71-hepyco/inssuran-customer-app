@@ -88,6 +88,36 @@ class INSSPolicy {
     );
   }
 
+  factory INSSPolicy.from(INSSPolicy other) {
+    return INSSPolicy(
+      id: other.id,
+      policy_number: other.policy_number,
+      policy_name: other.policy_name,
+      date_start: other.date_start,
+      date_end: other.date_end,
+      policy_type_name: other.policy_type_name,
+      branch: other.branch,
+      branch_name: other.branch_name,
+      provider: other.provider,
+      provider_name: other.provider_name,
+      provider_office: other.provider_office,
+      amount: other.amount,
+      certificate_number: other.certificate_number,
+      payment_day: other.payment_day,
+      payment_frequency: other.payment_frequency,
+      deductible: other.deductible,
+      contractor_name: other.contractor_name,
+      is_insured: other.is_insured,
+      notification_limit: other.notification_limit,
+      net_grant: other.net_grant,
+      total_grant: other.total_grant,
+      commission: other.commission,
+      condition: other.condition,
+      condition_deductible: other.condition_deductible,
+      state: other.state,
+      files: other.files
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "id": id??"",

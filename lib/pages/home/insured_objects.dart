@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:inssurancustomer/pages/home/vehicles.dart';
+import 'package:inssurancustomer/models/policy.dart';
+import 'package:inssurancustomer/pages/home/representative.dart';
+import 'package:inssurancustomer/pages/home/documents.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_remix/flutter_remix.dart';
@@ -7,11 +9,10 @@ import 'package:get/get.dart';
 import '../../components/drawer.dart';
 import '../../res/i_font_res.dart';
 import '../../utils/constants.dart';
-
-import 'insureds.dart';
+import 'coverages.dart';
 
 class InsuredObjectsPage extends StatefulWidget {
-  const InsuredObjectsPage({Key? key}) : super(key: key);
+  const InsuredObjectsPage({Key? key, required INSSPolicy policy}) : super(key: key);
 
   @override
   InsuredObjectsPageState createState() => InsuredObjectsPageState();
@@ -31,7 +32,7 @@ class InsuredObjectsPageState extends State<InsuredObjectsPage> with SingleTicke
     super.initState();
 
     _canChange = true;
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
         changePage(_tabController.index, page: true);
@@ -64,22 +65,10 @@ class InsuredObjectsPageState extends State<InsuredObjectsPage> with SingleTicke
   Widget _buildTitle(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: Text("insureds".tr, textAlign: TextAlign.center,
+      child: Text("${"policy".tr} - 00011", textAlign: TextAlign.center,
         style: Theme.of(Consts.navState.currentContext!).textTheme.headline2!.copyWith(color: const Color(Consts.C_WHITECOLOR)),
       ),
     );
-  }
-
-  List<Widget> _buildActions() {
-    return <Widget>[
-      IconButton(
-        icon: const Icon(
-          FlutterRemix.notification_2_line,
-          color: Color(Consts.C_WHITECOLOR),
-        ),
-        onPressed: () {},
-      ),
-    ];
   }
 
   TabBar _tabBar() {
@@ -95,13 +84,17 @@ class InsuredObjectsPageState extends State<InsuredObjectsPage> with SingleTicke
       ),
       tabs: <Widget>[
         Tab(
-          icon: const Icon(FlutterRemix.group_line, color: Color(Consts.C_WHITECOLOR), size: 22,),
-          text: "affiliates".tr,
+          //icon: const Icon(FlutterRemix.group_line, color: Color(Consts.C_WHITECOLOR), size: 22,),
+          text: "representative".tr,
 
         ),
         Tab(
-          icon: const Icon(FlutterRemix.roadster_line, color: Color(Consts.C_WHITECOLOR), size: 22,),
-          text: "vehicles".tr,
+          //icon: const Icon(FlutterRemix.roadster_line, color: Color(Consts.C_WHITECOLOR), size: 22,),
+          text: "documents".tr,
+        ),
+        Tab(
+          //icon: const Icon(FlutterRemix.roadster_line, color: Color(Consts.C_WHITECOLOR), size: 22,),
+          text: "coverages".tr,
         ),
       ],
     );
@@ -114,8 +107,8 @@ class InsuredObjectsPageState extends State<InsuredObjectsPage> with SingleTicke
       appBar: AppBar(
         backgroundColor: const Color(Consts.C_PRIMARYCOLOR),
         leading: IconButton(
-        icon: const Icon(FlutterRemix.menu_line),
-         onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+          icon: const Icon(FlutterRemix.arrow_left_line),
+          onPressed: () => Navigator.pop(context),
         ),
         title: _buildTitle(context),
         // actions: _buildActions(),
@@ -132,8 +125,9 @@ class InsuredObjectsPageState extends State<InsuredObjectsPage> with SingleTicke
           }
         },
         children: const <Widget>[
-          InsuredsPage(),
-          VehiclesPage(),
+          RepresentativePage(),
+          DocumentsPage(policy: null,),
+          CoveragesPage(),
         ],
       ),
     );

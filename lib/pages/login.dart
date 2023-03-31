@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -15,7 +14,6 @@ import '../models/label_function.dart';
 import '../res/assets_res.dart';
 import '../res/i_font_res.dart';
 import '../services/app_exception.dart';
-import '../services/local_storage_service.dart';
 import '../utils/constants.dart';
 import 'home.dart';
 
@@ -36,7 +34,6 @@ class LoginPageState extends State<LoginPage> {
 
   bool hasError = false;
   String currentText = "";
-  final formKey = GlobalKey<FormState>();
   late bool _loadingOverlay;
 
   @override
@@ -52,8 +49,8 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    _Ident.dispose();
-    _PIN.dispose();
+    //_Ident.dispose();
+    //_PIN.dispose();
     super.dispose();
   }
 
@@ -112,15 +109,22 @@ class LoginPageState extends State<LoginPage> {
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold),
                           ),
-                          //const SizedBox(height: 5,),
                           Text(Consts.S_WELCOME3,
                             style: TextStyle(
-                                fontFamily: FontRes.AVENIRROMAN,
-                                color: Colors.white.withOpacity(0.8),
-                                fontSize: 9,
-                            //    fontStyle: FontStyle.italic
+                              fontFamily: FontRes.AVENIRROMAN,
+                              color: Colors.white.withOpacity(0.8),
+                              fontSize: 9,
+                              //    fontStyle: FontStyle.italic
                             ),
                           ),
+                          Text(Consts.S_WELCOME4,
+                            style: TextStyle(
+                                fontFamily: FontRes.AVENIRHEAVY,
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          //const SizedBox(height: 5,),
                         ],
                       ),
                     ),
@@ -256,10 +260,11 @@ class LoginPageState extends State<LoginPage> {
                         width: MediaQuery.of(context).size.width - 25,
                         textColor: Colors.white.withOpacity(0.8),
                         onTap: () {
-                          if (_formKey.currentState!.validate()) {
+                          /*if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                             _doUserLogin();
-                          }
+                          }*/
+                          _doUserLogin();
                         }
                     ),
                   ],

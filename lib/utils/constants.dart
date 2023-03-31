@@ -62,6 +62,10 @@ class Consts {
   static const String S_REQUIRED_PASSWORD = "La contraseña es requerida";
   static const String S_EMAIL = "Correo electrónico";
   static const String S_REQUIRED_EMAIL = "El correo electrónico es requerido";
+  static const String S_REQUIRED_PHONE = "El teléfono es requerido";
+  static const String S_REQUIRED_ADDRESS = "La dirección es requerida";
+  static const String S_REQUIRED_PROVINCE = "La provincia es requerida";
+  static const String S_REQUIRED_MUNICIPALITY = "El municipio es requerido";
   static const String INVALID_EMAIL = "El correo electrónico no es válido";
 
   static const String S_IDENTIFICACION = "Identificación";
@@ -69,7 +73,7 @@ class Consts {
   static const String S_IDENTIFICACION_MAXLENGTH = "La identificación debe tener un máximo de 20 characteres";
   static const int I_IDENTIFICACION_MINLENGTH = 4;
   static const int I_IDENTIFICACION_MAXLENGTH = 20;
-  static const String S_REQUIRED_IDENTIFICACION = "La identificación es requerido";
+  static const String S_REQUIRED_IDENTIFICACION = "La identificación es requerida";
   static const String S_PIN = "PIN";
 
   static const String S_NOTIFICATIONCHANNEL_ID = "high_importance_channel";

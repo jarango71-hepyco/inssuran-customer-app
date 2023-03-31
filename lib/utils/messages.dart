@@ -4,6 +4,20 @@ class Messages extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
     'en_US': {
+      'historical': 'Historical', // Histórico
+      'profile': 'Profile', // Perfil
+      'mypolicies': 'My policies', //mis pólizas
+      'policyhistory': 'Policy history', //Histórico de pólizas
+      'representative': 'Representative',  // represetante
+      'nopolicy': 'policy number', //Número de póliza
+      'identification': 'identification', //identificación
+      'email': 'Email', //Correo electrónico
+      'phone': 'Phone', // Teléfono
+      'address': 'Address', // Dirección
+      'province': 'Province', // Provincia
+      'municipality': 'Municipality', // Municipio
+      'coverages': 'Coverages', // Coberturas
+
       'policies': 'Policies', // Pólizas
       'policy': 'Policy', // Póliza
       'policytype': 'Policy type', // Tipo de póliza
@@ -75,12 +89,15 @@ class Messages extends Translations {
       'cancel': 'Cancel',
       'yes': 'Yes',
       'no': 'No',
+      'updateinfo': 'Update info', // Actualizar información
+      'editprofile': 'Edit profile', // Editar perfil
 
       'closesessiontitle': 'You are logging out. We will ask for your data the next time you open the app.',
 
       'ERROR_MSG_FETCH_DATA_EXCEPTION ': 'Ocurrió un error de conexión, por favor vuelve a intentarlo',
       'ERROR_MSG_UNAUTHORIZED_EXCEPTION': 'An error occurred while logging in',
       'ERROR_LOGIN_MSG': 'The access data is incorrect',
+      'ERROR_PROFILE_EDIT_MSG': 'An error has occurred saving the profile',
       'POLICIES_ERROR_MSG': 'An error has occurred while listing the policies',
       'INSUREDS_ERROR_MSG': ' An error has occurred while listing affiliates',
       'VEHICLES_ERROR_MSG': 'An error has occurred while listing the vehicles',
@@ -88,8 +105,30 @@ class Messages extends Translations {
       'PROVIDERS_ERROR_MSG': 'An error has occurred while listing the companies',
       'PAYMENTS_ERROR_MSG': 'An error has occurred while listing wallets',
       'ERROR_URL_ONLOAD_DOC': 'An error occurred loading the document',
-    },
+
+      'REQUIRED_EMAIL':  'Email is required',
+      'REQUIRED_PHONE': 'The phone is required',
+      'REQUIRED_ADDRESS': 'Address is required',
+      'REQUIRED_PROVINCE': 'The province is required',
+      'REQUIRED_MUNICIPALITY': 'The municipality is required',
+      'INVALID_EMAIL': 'Email is invalid'
+},
     'es_ES': {
+      'historical': 'Histórico',
+      'profile': 'Perfil',
+      'mypolicies': 'Mis pólizas',
+      'representative': 'Represetante',
+      'representative': 'Represetante',
+      'nopolicy': 'Número de póliza',
+      'policyhistory': 'Histórico de pólizas', //
+      'identification': 'Identificación',
+      'email': 'Correo electrónico',
+      'phone': 'Teléfono',
+      'address': 'Dirección',
+      'province': 'Provincia',
+      'municipality': 'Municipio',
+      'coverages': 'Coberturas',
+
       'policies': 'Pólizas',
       'policy': 'Póliza',
       'policytype': 'Tipo de póliza',
@@ -161,12 +200,15 @@ class Messages extends Translations {
       'cancel': 'Cancelar',
       'yes': 'Sí',
       'no': 'No',
+      'updateinfo': 'Actualizar información',
+      'editprofile': 'Editar perfil',
 
       'closesessiontitle': 'Estás cerrando sesión. Pediremos tus datos la próxima ocasión que abras la app.',
 
-      'ERROR_MSG_FETCH_DATA_EXCEPTION ': 'Ocurrió un error de conexión, por favor vuelve a intentarlo',
+      'ERROR_MSG_FETCH_DATA_EXCEPTION': 'Ocurrió un error de conexión, por favor vuelve a intentarlo',
       'ERROR_MSG_UNAUTHORIZED_EXCEPTION': 'Ha ocurrido un error al iniciar sesión',
       'ERROR_LOGIN_MSG': 'Los datos de acceso son incorrectos',
+      'ERROR_PROFILE_EDIT_MSG': 'Ha ocurrido un error guardando el perfil',
       'POLICIES_ERROR_MSG': 'Ha ocurrido un error al listar las pólizas',
       'INSUREDS_ERROR_MSG': 'Ha ocurrido un error al listar los afiliados',
       'VEHICLES_ERROR_MSG': 'Ha ocurrido un error al listar los vehículos',
@@ -175,7 +217,14 @@ class Messages extends Translations {
       'PAYMENTS_ERROR_MSG': 'Ha ocurrido un error al listar las carteras',
       'ERROR_URL_ONLOAD_DOC': 'Ha ocurrido un error cargando el documento',
 
-}
+      'REQUIRED_EMAIL':  'El correo electrónico es requerido',
+      'REQUIRED_PHONE': 'El teléfono es requerido',
+      'REQUIRED_ADDRESS': 'La dirección es requerida',
+      'REQUIRED_PROVINCE': 'La provincia es requerida',
+      'REQUIRED_MUNICIPALITY': 'El municipio es requerido',
+      'INVALID_EMAIL': 'El correo electrónico no es válido'
+
+    }
   };
 }
 

@@ -6,10 +6,9 @@ import 'package:get/get.dart';
 
 import '../res/i_font_res.dart';
 import '../utils/constants.dart';
-import 'home/payments.dart';
-import 'home/contractors.dart';
-import 'home/insured_objects.dart';
+import 'home/historical.dart';
 import 'home/policies.dart';
+import 'home/profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,14 +17,13 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class HomePageState extends State<HomePage> {
 
   int _selectedPage = 0;
   final List<Widget> _pageOptions = [
     const PoliciesPage(),
-    const InsuredObjectsPage(),
-    const ContractorsPage(),
-    const PaymentsPage(),
+    const HistoricalPage(),
+    const ProfilePage(),
   ];
 
   @override
@@ -45,8 +43,9 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
     /*if (language == "en") {
       locale = const Locale('en','US');
     }*/
+    if (!mounted) return;
     setState(() {
-      Get.updateLocale(locale);
+      //Get.updateLocale(locale);
     });
   }
 
@@ -59,10 +58,9 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
         color: Colors.white.withOpacity(0.9),
         backgroundColor: const Color(Consts.C_PRIMARYCOLOR),
         items: [
-          TabItem(icon: FlutterRemix.shield_check_line , title: "policies".tr, fontFamily: FontRes.AVENIRROMAN),
-          TabItem(icon: FlutterRemix.secure_payment_line, title: "insureds".tr, fontFamily: FontRes.AVENIRROMAN),
-          TabItem(icon: FlutterRemix.user_follow_line, title: "contractors".tr, fontFamily: FontRes.AVENIRROMAN),
-          TabItem(icon: FlutterRemix.wallet_3_line, title: "payments".tr, fontFamily: FontRes.AVENIRROMAN),
+          TabItem(icon: FlutterRemix.shield_check_line , title: "mypolicies".tr, fontFamily: FontRes.AVENIRROMAN),
+          TabItem(icon: FlutterRemix.history_line, title: "historical".tr, fontFamily: FontRes.AVENIRROMAN),
+          TabItem(icon: FlutterRemix.profile_line, title: "profile".tr, fontFamily: FontRes.AVENIRROMAN),
         ],
         initialActiveIndex: _selectedPage,
         onTap: (index){

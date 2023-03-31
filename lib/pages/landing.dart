@@ -25,7 +25,8 @@ class _StateLandingPage extends State<LandingPage> {
     //await LocalStorageService.removeUserData();
     bool isLoggedIn = await _loadUserData();
     await Future.delayed(const Duration(seconds: 2));
-    return isLoggedIn;
+    //return isLoggedIn;
+    return false;
   }
 
   _loadUserData() async {
@@ -50,7 +51,8 @@ class _StateLandingPage extends State<LandingPage> {
   {
     if (success) {
       Navigator.pushReplacement(context, FadeRoute(page: const HomePage(),
-          routeSettings: const RouteSettings(name: "HomePage"), duration: const Duration(milliseconds: 1000)));
+          routeSettings: const RouteSettings(name: "HomePage"),
+          duration: const Duration(milliseconds: 1000)));
     } else {
       Navigator.pushReplacement(
           context, FadeRoute(page: const LoginPage(),
