@@ -1,3 +1,6 @@
+import 'package:inssurancustomer/models/partner2.dart';
+
+import 'coverage.dart';
 import 'files.dart';
 
 class INSSPolicy {
@@ -26,7 +29,9 @@ class INSSPolicy {
   String condition;
   String condition_deductible;
   String state;
+  INSSPartner2 partner;
   List<INSSFile> files;
+  List<INSSCoverage> coverages;
 
   INSSPolicy({
     required this.id,
@@ -54,7 +59,9 @@ class INSSPolicy {
     required this.condition,
     required this.condition_deductible,
     required this.state,
-    required this.files
+    required this.partner,
+    required this.files,
+    required this.coverages
   });
 
   factory INSSPolicy.fromJson(Map<String, dynamic> json) {
@@ -84,7 +91,9 @@ class INSSPolicy {
       condition: json["condition"]??"",
       condition_deductible: json["condition_deductible"]??"",
       state: json["state"]??"",
-      files: List<INSSFile>.from(json["files"].map((po) => INSSFile.fromJson(po))),
+      partner: INSSPartner2.fromJson(json["partner"]),
+      files: List<INSSFile>.from(json["files"].map((fo) => INSSFile.fromJson(fo))),
+      coverages: List<INSSCoverage>.from(json["coverages"].map((co) => INSSCoverage.fromJson(co))),
     );
   }
 
@@ -115,7 +124,9 @@ class INSSPolicy {
       condition: other.condition,
       condition_deductible: other.condition_deductible,
       state: other.state,
-      files: other.files
+      partner: other.partner,
+      files: other.files,
+      coverages: other.coverages
     );
   }
 

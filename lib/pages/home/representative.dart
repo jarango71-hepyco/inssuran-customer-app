@@ -1,15 +1,17 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:get/get.dart';
-import 'package:inssurancustomer/pages/home/profile_edit.dart';
-import '../../components/route_transitions/slide_right.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../components/common_controls.dart';
+import '../../models/policy.dart';
 import '../../res/i_font_res.dart';
 import '../../utils/constants.dart';
 
 
 class RepresentativePage extends StatefulWidget {
-  const RepresentativePage({Key? key}) : super(key: key);
+  const RepresentativePage({Key? key, required this.policy}) : super(key: key);
+  final INSSPolicy policy;
 
   @override
   State<StatefulWidget> createState() => _StateRepresentativePage();
@@ -39,9 +41,6 @@ class _StateRepresentativePage extends State<RepresentativePage> {
 
   @override
   Widget build(BuildContext context) {
-    double radius = 6.0;
-    double height = 100;
-    double width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -50,10 +49,10 @@ class _StateRepresentativePage extends State<RepresentativePage> {
             children: <Widget>[
               const SizedBox(height: 10,),
 
-              const Center(
+              Center(
                 //widget.customer.name
-                child: Text("Jorge Luis Arango Labrada",
-                  style: TextStyle(
+                child: Text(widget.policy.partner.name,
+                  style: const TextStyle(
                     fontFamily: FontRes.GILROYLIGHT,
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
@@ -72,7 +71,7 @@ class _StateRepresentativePage extends State<RepresentativePage> {
                   ),
                 ),
               ),*/
-              const SizedBox(height: 10,),
+              const SizedBox(height: 15,),
               Center(
                 child: Container(
                   width: 150,
@@ -81,12 +80,11 @@ class _StateRepresentativePage extends State<RepresentativePage> {
                     color: Color(Consts.C_BORDERCOLOR),
                     shape: BoxShape.circle,
                   ),
-                  child: const Center(
-                    //child: true?
-                    child:
-                    /*ClipOval(
+                  child: Center(
+                    child: widget.policy.partner.logo_url.isNotEmpty?
+                    ClipOval(
                         child: CachedNetworkImage(
-                          imageUrl: "",
+                          imageUrl: Consts.appDomain+widget.policy.partner.logo_url,
                           height: 100,
                           width: 100,
                           fit: BoxFit.cover,
@@ -103,8 +101,8 @@ class _StateRepresentativePage extends State<RepresentativePage> {
                             ),
                           ),
                         )
-                    ):*/
-                    SizedBox(
+                    ):
+                    const SizedBox(
                       width: 100,
                       height: 100,
                       child: Icon(FlutterRemix.user_fill,
@@ -118,7 +116,7 @@ class _StateRepresentativePage extends State<RepresentativePage> {
               const SizedBox(height: 15,),
 
               // Información personal
-              const SizedBox(height: 10,),
+              /*const SizedBox(height: 10,),
               Text("  ${"personalinformation".tr}",
                 //textAlign: TextAlign.start,
                 style: const TextStyle(
@@ -127,12 +125,12 @@ class _StateRepresentativePage extends State<RepresentativePage> {
                   fontWeight: FontWeight.w800,
                   color: Color(Consts.C_PRIMARYCOLOR),
                 ),
-              ),
+              ),*/
 
               const SizedBox(height: 5,),
               Column(
                 children: [
-                  Card(
+                  /*Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: _getBorderRadius(10),
                     ),
@@ -187,7 +185,7 @@ class _StateRepresentativePage extends State<RepresentativePage> {
                         ),
                       ],
                     ),
-                  ),
+                  ),*/
                   const SizedBox(height: 30,),
                   // Telefono
                   GestureDetector(
@@ -212,7 +210,7 @@ class _StateRepresentativePage extends State<RepresentativePage> {
                           ),
                           const SizedBox(width: 5,),
                           Expanded(
-                            child: Text("+593 99 523 0554",
+                            child: Text(widget.policy.partner.phone,
                               style: TextStyle(
                                 fontFamily: FontRes.GILROYLIGHT,
                                 color: Colors.white.withOpacity(0.8),
@@ -225,7 +223,7 @@ class _StateRepresentativePage extends State<RepresentativePage> {
                       ),
                     ),
                     onTap: () {
-                      //csCallNumber(widget.provider.phone);
+                      csCallNumber(widget.policy.partner.phone);
                     },
                   ),
                   // Email
@@ -251,7 +249,7 @@ class _StateRepresentativePage extends State<RepresentativePage> {
                           ),
                           const SizedBox(width: 5,),
                           Expanded(
-                            child: Text("jarango71@gmail.com",
+                            child: Text(widget.policy.partner.email,
                               style: TextStyle(
                                 fontFamily: FontRes.GILROYLIGHT,
                                 color: Colors.white.withOpacity(0.8),
@@ -264,7 +262,7 @@ class _StateRepresentativePage extends State<RepresentativePage> {
                       ),
                     ),
                     onTap: () {
-                      //csSendMail(widget.provider.email);
+                      csSendMail(widget.policy.partner.email);
                     },
                   ),
 

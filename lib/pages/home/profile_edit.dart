@@ -5,7 +5,10 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter_remix/flutter_remix.dart';
 import '../../components/common_controls.dart';
 import '../../components/dropdown.dart';
+import '../../controllers/user.dart';
+import '../../models/Place.dart';
 import '../../models/label_function.dart';
+import '../../models/user.dart';
 import '../../res/i_font_res.dart';
 import '../../services/app_exception.dart';
 import '../../utils/constants.dart';
@@ -21,30 +24,51 @@ class ProfileEditPage extends StatefulWidget {
 class _StateProfileEditPage extends State<ProfileEditPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
+
+  final UserController _userController = Get.find<UserController>();
+  late User? _user;
+
   final _dropDownProvinceKey = GlobalKey<csDropDownFieldState>();
-  final _dropDownMunicipalityKey = GlobalKey<csDropDownFieldState>();
+  final _dropDownCityKey = GlobalKey<csDropDownFieldState>();
+
 
   late TextEditingController _phone;
   late TextEditingController _email;
   late TextEditingController _address;
 
-  List<String> _provinces = [];
-  List<String> _municipalities = [];
+  List<INSSPlace> _provinces = [];
+  List<INSSPlace> _citys = [];
 
-  String? provinceId;
-  String? municipalityId;
+  late int provinceId;
+  late int cityId;
+  late String provinceText;
+  late String cityText;
 
-  late bool _loadingOverlay;
+  bool _loadingOverlay = false;
 
   @override
   void initState() {
     super.initState();
+    _user = _userController.user;
 
-    _phone = TextEditingController(text: "");
-    _email = TextEditingController(text: "");
-    _address = TextEditingController(text: "");
+    _phone = TextEditingController(text: _user!.phone);
+    _email = TextEditingController(text: _user!.email);
+    _address = TextEditingController(text: _user!.street);
 
-    _loadingOverlay = false;
+    provinceId = _user!.province;
+    cityId = _user!.city;
+    provinceText = _user!.province_name;
+    cityText = _user!.city_name;
+
+    initialization();
+  }
+
+  Future initialization() async {
+    _provinces = await _userController.getPlaces(1);
+    _citys = await _userController.getPlaces(provinceId);
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -64,20 +88,8 @@ class _StateProfileEditPage extends State<ProfileEditPage> {
     );
   }
 
-  BorderRadius _getBorderRadius(double radius) {
-    return BorderRadius.only(
-      topLeft: Radius.circular(radius),
-      topRight: Radius.zero,
-      bottomRight: Radius.circular(radius),
-      bottomLeft: Radius.circular(radius),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    double radius = 6.0;
-    double height = 100;
-    double width = MediaQuery.of(context).size.width;
     return csLoadingOverlay(
       loading: _loadingOverlay,
       child: Scaffold(
@@ -99,10 +111,10 @@ class _StateProfileEditPage extends State<ProfileEditPage> {
               children: <Widget>[
                 const SizedBox(height: 10,),
 
-                const Center(
+                Center(
                   //widget.customer.name
-                  child: Text("Hector Curbelo Barrio",
-                    style: TextStyle(
+                  child: Text(_user!.name,
+                    style: const TextStyle(
                       fontFamily: FontRes.GILROYLIGHT,
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
@@ -130,7 +142,7 @@ class _StateProfileEditPage extends State<ProfileEditPage> {
                       children: <Widget>[
                         const SizedBox(height: 15,),
                         csTextField(
-                          label: "email".tr,
+                          label: "${"email".tr}*",
                           labelColor: Colors.black.withOpacity(0.45),
                           fillColor: const Color(Consts.C_FILLCOLOR),
                           borderColor: const Color(Consts.C_BORDERCOLOR),
@@ -150,7 +162,7 @@ class _StateProfileEditPage extends State<ProfileEditPage> {
                         const SizedBox(height: 16,),
                         // Phone
                         csTextField(
-                          label: "phone".tr,
+                          label: "${"phone".tr}*",
                           labelColor: Colors.black.withOpacity(0.45),
                           fillColor: const Color(Consts.C_FILLCOLOR),
                           borderColor: const Color(Consts.C_BORDERCOLOR),
@@ -165,43 +177,23 @@ class _StateProfileEditPage extends State<ProfileEditPage> {
                           },
                         ),
                         const SizedBox(height: 16,),
-                        // Address
-                        csTextField(
-                          label: "street".tr,
-                          labelColor: Colors.black.withOpacity(0.45),
-                          fillColor: const Color(Consts.C_FILLCOLOR),
-                          borderColor: const Color(Consts.C_BORDERCOLOR),
-                          controller: _address,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          keyboardType: TextInputType.phone,
-                          validator: (value) {
-                            if (value != null && value.isEmpty) {
-                              return "REQUIRED_ADDRESS".tr;
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16,),
                         // Provinces
                         csDropDownField(
                           key: _dropDownProvinceKey,
-                          label: "province".tr,
-                          initialValue: "",
+                          label: "${"province".tr}*",
                           items: _provinces
                             .map((item) => DropdownItem(
-                              //value: item.id,
-                              //text: item.name,
-                              value: "",
-                              text: "",
+                               value: item.id.toString(),
+                               text: item.name,
                           )).toList(),
+                          initialValue: provinceText,
                           separatorItemHeight: 10,
                           onChanged: (dropdownItem) {
-                            municipalityId = null;
-                            _municipalities.clear();
-                            //_getMunicipalities(dropdownItem.value);
-                            setState(() {
-                              provinceId = dropdownItem.value;
-                            });
+                            provinceId = int.parse(dropdownItem.value);
+                            provinceText = dropdownItem.text;
+                            cityText = "";
+                            _citys.clear();
+                            _getCitys(provinceId);
                           },
                           validator: (value) {
                             if (value != null && value.isEmpty) {
@@ -213,23 +205,41 @@ class _StateProfileEditPage extends State<ProfileEditPage> {
                         const SizedBox(height: 16,),
                         // Municipalities
                         csDropDownField(
-                          key: _dropDownMunicipalityKey,
-                          label: "city".tr,
-                          initialValue: "",
-                          items: _municipalities
+                          key: _dropDownCityKey,
+                          label: "${"city".tr}*",
+                          items: _citys
                            .map((item) => DropdownItem(
-                             value: "",
-                              text: "",
+                              value: item.id.toString(),
+                              text: item.name,
                           )).toList(),
+                          initialValue: cityText,
                           separatorItemHeight: 10,
                           onChanged: (dropdownItem) {
+                            cityText = dropdownItem.text;
                             setState(() {
-                              municipalityId = dropdownItem.value;
+                              cityId = int.parse(dropdownItem.value);
                             });
                           },
                           validator: (value) {
                             if (value != null && value.isEmpty) {
                               return "REQUIRED_MUNICIPALITY".tr;
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16,),
+                        // Address
+                        csTextField(
+                          label: "${"street".tr}*",
+                          labelColor: Colors.black.withOpacity(0.45),
+                          fillColor: const Color(Consts.C_FILLCOLOR),
+                          borderColor: const Color(Consts.C_BORDERCOLOR),
+                          controller: _address,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value != null && value.isEmpty) {
+                              return "REQUIRED_ADDRESS".tr;
                             }
                             return null;
                           },
@@ -258,14 +268,23 @@ class _StateProfileEditPage extends State<ProfileEditPage> {
     );
   }
 
+  _getCitys(int province) async {
+    _citys = await _userController.getPlaces(province);
+    if (_citys.isNotEmpty) {
+      cityId = _citys[0].id;
+      cityText = _citys[0].name;
+    }
+    setState(() {});
+  }
+
   _doSave() async {
     try {
       setState(() {
         _loadingOverlay = true;
       });
-      //await _userController.save(_email.text, _phone.text, _address.text, ...);
+      await _userController.updateProfile(_email.text, _phone.text, _address.text, provinceId, provinceText, cityId, cityText);
       if (!mounted) return;
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      showSuccess(context);
     } on BadRequestException catch (e) {
       _formKey.currentState!.validate();
     } on FetchDataException {
@@ -288,8 +307,22 @@ class _StateProfileEditPage extends State<ProfileEditPage> {
       setState(() {
         _loadingOverlay = false;
       });
-      //_userController.loadingLoginUser.value = false;
     }
+  }
+
+  void showSuccess(BuildContext context) {
+    final List<LabelFunction> buttons = [
+      LabelFunction("ok".tr,  (){
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        //Navigator.of(context).pop();
+      },
+      color: const Color(Consts.C_PRIMARYCOLOR),),
+    ];
+
+    csDialog(context: context,
+        text: "updatesuccess".tr,
+        buttons: buttons
+    );
   }
 
 }

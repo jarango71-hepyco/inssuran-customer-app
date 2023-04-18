@@ -37,8 +37,6 @@ class _StatePoliciesPage extends State<PoliciesPage> {
     _searchQuery = TextEditingController();
     _policiesController.filterController = _searchQuery!;
 
-    listPolicies();
-
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge) {
         bool isTop = _scrollController.position.pixels == 0;
@@ -52,6 +50,8 @@ class _StatePoliciesPage extends State<PoliciesPage> {
         }
       }
     });
+
+    listPolicies();
   }
 
   @override
@@ -62,12 +62,14 @@ class _StatePoliciesPage extends State<PoliciesPage> {
 
   void listPolicies({bool paginated = false}) async {
     try {
-      setState(() {_loadingOverlay = true;});
-      await _policiesController.listPolicies (paginated: paginated);
-      // aqui
-      if (_policiesController.policies.isNotEmpty) {
-        _policiesController.policies.removeWhere((element) => element.state == "closed");
+      if (mounted) {
+          setState(() {
+            _loadingOverlay = true;
+          });
+      } else {
+        _loadingOverlay = true;
       }
+      await _policiesController.listPolicies (paginated: paginated);
     } on BadRequestException catch (e) {
       csDialog(context: context, text: e.message,
           buttons: [
@@ -92,13 +94,18 @@ class _StatePoliciesPage extends State<PoliciesPage> {
             }),
           ]);
     } finally {
-      setState(() {_loadingOverlay = false;});
+      if (mounted) {
+        setState(() {
+          _loadingOverlay = false;
+        });
+      } else {
+        _loadingOverlay = false;
+      }
       _policiesController.loading.value = false;
       _policiesController.scrollLoading.value = false;
       _policiesController.update();
     }
   }
-
 
   void _startSearch() {
     listPolicies();
@@ -316,14 +323,14 @@ class _StatePoliciesPage extends State<PoliciesPage> {
         key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: const Color(Consts.C_PRIMARYCOLOR),
-          /*leading: IconButton(
+          leading: IconButton(
             icon: const Icon(FlutterRemix.menu_line),
             onPressed: () => _scaffoldKey.currentState!.openDrawer(),
-          ),*/
+          ),
           title: _buildTitle(context),
           // actions: _buildActions(),
         ),
-        //drawer: buildDrawer(context),
+        drawer: buildDrawer(context),
         body: GetBuilder<PoliciesController>(
           builder: (context) {
             return Container(

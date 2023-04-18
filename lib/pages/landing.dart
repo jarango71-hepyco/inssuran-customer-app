@@ -5,7 +5,6 @@ import '../components/route_transitions/fade.dart';
 import '../controllers/user.dart';
 import '../models/user.dart';
 import '../res/assets_res.dart';
-import '../services/local_storage_service.dart';
 import '../utils/constants.dart';
 import 'home.dart';
 import 'login.dart';
@@ -25,8 +24,7 @@ class _StateLandingPage extends State<LandingPage> {
     //await LocalStorageService.removeUserData();
     bool isLoggedIn = await _loadUserData();
     await Future.delayed(const Duration(seconds: 2));
-    //return isLoggedIn;
-    return false;
+    return isLoggedIn;
   }
 
   _loadUserData() async {
@@ -45,14 +43,13 @@ class _StateLandingPage extends State<LandingPage> {
     _checkIfAuthenticated().then((success) {
       _gotoView(success);
     });
-}
+  }
 
   _gotoView(bool success)
   {
     if (success) {
       Navigator.pushReplacement(context, FadeRoute(page: const HomePage(),
-          routeSettings: const RouteSettings(name: "HomePage"),
-          duration: const Duration(milliseconds: 1000)));
+          routeSettings: const RouteSettings(name: "HomePage"), duration: const Duration(milliseconds: 1000)));
     } else {
       Navigator.pushReplacement(
           context, FadeRoute(page: const LoginPage(),
@@ -66,13 +63,13 @@ class _StateLandingPage extends State<LandingPage> {
     return Container(
       color: const Color(Consts.C_WHITECOLOR),
       child: Center(
-          child: //Image.asset(AssetsRes.LOGO)
-          SvgPicture.asset(
-            AssetsRes.LOGO,
-            width: 100,
-            height: 108,
-            // width: 112.14,
-          ),
+        child: //Image.asset(AssetsRes.LOGO)
+        SvgPicture.asset(
+          AssetsRes.LOGO,
+          width: 100,
+          height: 108,
+          // width: 112.14,
+        ),
       ),
     );
   }

@@ -5,12 +5,13 @@ import 'package:get/get.dart';
 import '../../components/common_controls.dart';
 import '../../components/drawer.dart';
 import '../../components/route_transitions/slide_right.dart';
-import '../../controllers/policies.dart';
+import '../../controllers/historical.dart';
 import '../../models/label_function.dart';
 import '../../models/policy.dart';
 import '../../res/i_font_res.dart';
 import '../../services/app_exception.dart';
 import '../../utils/constants.dart';
+import 'insured_objects.dart';
 
 
 class HistoricalPage extends StatefulWidget {
@@ -28,29 +29,29 @@ class _StateHistoricalPage extends State<HistoricalPage> {
   bool _loadingOverlay = false;
 
   final _scrollController = ScrollController();
-  final PoliciesController _policiesController = Get.find<PoliciesController>();
+  final HistoricalsController _historicalsController = Get.find<HistoricalsController>();
 
   @override
   void initState() {
     super.initState();
     _searchQuery = TextEditingController();
-    _policiesController.filterController = _searchQuery!;
-
-    listPolicies();
+    _historicalsController.filterController = _searchQuery!;
 
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge) {
         bool isTop = _scrollController.position.pixels == 0;
         if (isTop) {
           print('At the top');
-          listPolicies(paginated: false);
+          listHistoricals(paginated: false);
         } else {
-          if (!_policiesController.allLoaded.value) {
-            listPolicies(paginated: true);
+          if (!_historicalsController.allLoaded.value) {
+            listHistoricals(paginated: true);
           }
         }
       }
     });
+
+    listHistoricals();
   }
 
   @override
@@ -59,10 +60,16 @@ class _StateHistoricalPage extends State<HistoricalPage> {
     super.dispose();
   }
 
-  void listPolicies({bool paginated = false}) async {
+  void listHistoricals({bool paginated = false}) async {
     try {
-      setState(() {_loadingOverlay = true;});
-      await _policiesController.listPolicies (paginated: paginated);
+      if (mounted) {
+        setState(() {
+          _loadingOverlay = true;
+        });
+      } else {
+        _loadingOverlay = true;
+      }
+      await _historicalsController.listHistoricals(paginated: paginated);
     } on BadRequestException catch (e) {
       csDialog(context: context, text: e.message,
           buttons: [
@@ -87,21 +94,27 @@ class _StateHistoricalPage extends State<HistoricalPage> {
             }),
           ]);
     } finally {
-      setState(() {_loadingOverlay = false;});
-      _policiesController.loading.value = false;
-      _policiesController.scrollLoading.value = false;
-      _policiesController.update();
+      if (mounted) {
+        setState(() {
+          _loadingOverlay = false;
+        });
+      } else {
+        _loadingOverlay = false;
+      }
+      _historicalsController.loading.value = false;
+      _historicalsController.scrollLoading.value = false;
+      _historicalsController.update();
     }
   }
 
 
   void _startSearch() {
-    listPolicies();
+    listHistoricals();
   }
 
   void _stopSearching() {
     _searchQuery!.clear();
-    listPolicies();
+    listHistoricals();
   }
 
   Color? _getColorType(String type) {
@@ -276,8 +289,8 @@ class _StateHistoricalPage extends State<HistoricalPage> {
         ),
       ),
       onTap: () {
-        /*Navigator.push(context, SlideRightRoute(page: PolicyDetailPage(policy: policy,),
-            routeSettings: const RouteSettings(name: "PolicyDetailPage")));*/
+        Navigator.push(context, SlideRightRoute(page: InsuredObjectsPage(policy: policy,),
+            routeSettings: const RouteSettings(name: "PolicyDetailPage")));
       },
     );
   }
@@ -311,22 +324,22 @@ class _StateHistoricalPage extends State<HistoricalPage> {
         key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: const Color(Consts.C_PRIMARYCOLOR),
-          /*leading: IconButton(
+          leading: IconButton(
             icon: const Icon(FlutterRemix.menu_line),
             onPressed: () => _scaffoldKey.currentState!.openDrawer(),
-          ),*/
+          ),
           title: _buildTitle(context),
-          // actions: _buildActions(),
+          //actions: _buildActions(),
         ),
-        //drawer: buildDrawer(context),
-        body: GetBuilder<PoliciesController>(
+        drawer: buildDrawer(context),
+        body: GetBuilder<HistoricalsController>(
             builder: (context) {
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: <Widget>[
                     const SizedBox(height: 10,),
-                    if (_policiesController.policies.isNotEmpty)
+                    if (_historicalsController.policies.isNotEmpty)
                       csSearch(
                           controller: _searchQuery,
                           label: '',
@@ -360,19 +373,19 @@ class _StateHistoricalPage extends State<HistoricalPage> {
                           }
                       ),
                     const SizedBox(height: 10,),
-                    if (_policiesController.policies.isNotEmpty)
+                    if (_historicalsController.policies.isNotEmpty)
                       Expanded(
                         child: ListView.builder(
                           physics: const AlwaysScrollableScrollPhysics(),
                           controller: _scrollController,
                           shrinkWrap: true,
-                          itemCount: _policiesController.policies.length,
+                          itemCount: _historicalsController.policies.length,
                           itemBuilder: (context, index) {
-                            return _drawCard(_policiesController.policies[index]);
+                            return _drawCard(_historicalsController.policies[index]);
                           },
                         ),
                       ),
-                    if (_policiesController.policies.isEmpty && !_policiesController.loading.value)
+                    if (_historicalsController.policies.isEmpty && !_historicalsController.loading.value)
                       Center(
                         child: csEmptyList("noitems".tr),
                       ),

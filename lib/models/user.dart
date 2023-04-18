@@ -1,50 +1,69 @@
 class User {
-  String user_id;
-  String full_name;
+  String id;
+  String name;
+  String identification_type;
+  String identification;
+  String pinCode;
+  String legal_type;
+  String phone;
   String email;
-  bool has_partner;
-  String? partner_id;
-  String language;
-  bool valid_subscription;
-  String refresh;
-  String access;
+  String street;
+  String province_name;
+  String city_name;
+  int country;
+  int province;
+  int city;
 
   User({
-    required this.user_id,
-    required this.full_name,
+    required this.id,
+    required this.name,
+    required this.identification_type,
+    required this.identification,
+    required this.pinCode,
+    required this.legal_type,
+    required this.phone,
     required this.email,
-    required this.has_partner,
-    required this.partner_id,
-    required this.language,
-    required this.valid_subscription,
-    required this.refresh,
-    required this.access,
+    required this.street,
+    required this.province_name,
+    required this.city_name,
+    required this.country,
+    required this.province,
+    required this.city
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-        user_id: json['user_id'],
-        full_name: json['full_name'],
-        email: json['email'],
-        has_partner: json['has_partner'],
-        partner_id: json['partner_id']??"",
-        language: json['language'],
-        valid_subscription: json['valid_subscription'],
-        refresh: json['refresh'],
-        access: json['access']
+        id: json['id']??"",
+        name: json['name']??"",
+        identification_type: json['identification_type']??"",
+        identification: json['identification']??"",
+        pinCode: json['pinCode']??"",
+        legal_type: json['legal_type']??"",
+        phone: json['phone']??"",
+        email: json['email']??"",
+        street: json['street']??"",
+        province_name: json['province_name']??"",
+        city_name: json['city_name']??"",
+        country: json['country']??0,
+        province: json['province']??0,
+        city: json['city']??0,
    );
   }
 
   Map<String, dynamic> toJson() => {
-    "user_id": user_id,
-    "full_name": full_name,
+    "id": id,
+    "name": name,
+    "identification_type": identification_type,
+    "identification": identification,
+    "pinCode": pinCode,
+    "legal_type": legal_type,
+    "phone": phone??"",
     "email": email,
-    "has_partner": has_partner,
-    "email": email,
-    "partner_id": partner_id??"",
-    "language": language,
-    "valid_subscription": valid_subscription,
-    "refresh": refresh,
-    "access": access
+    "street": street,
+    "province_name": province_name,
+    "city_name": city_name,
+    "country": country,
+    "province": province,
+    "city": city
   };
 }

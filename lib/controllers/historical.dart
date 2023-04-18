@@ -8,7 +8,7 @@ import '../services/api_base_helper.dart';
 import '../services/local_storage_service.dart';
 import '../utils/constants.dart';
 
-class PoliciesController extends GetxController {
+class HistoricalsController extends GetxController {
   final ApiBaseHelper _helper = ApiBaseHelper();
 
   String baseUrl = "/api/cutomer-mobile";
@@ -21,7 +21,7 @@ class PoliciesController extends GetxController {
 
   TextEditingController filterController = TextEditingController(text: '');
 
-  Future<void> listPolicies({bool paginated = false}) async {
+  Future<void> listHistoricals({bool paginated = false}) async {
     if (paginated) {
       scrollLoading.value = true;
     } else {
@@ -29,7 +29,7 @@ class PoliciesController extends GetxController {
       currentPage = 1;
       allLoaded.value = false;
     }
-    //update();
+    update();
 
     User? user = await LocalStorageService.getUserData();
 
@@ -42,7 +42,7 @@ class PoliciesController extends GetxController {
       "pin_code": user.pinCode
     };
 
-    String response = await _helper.post("${Consts.appDomain}/$baseUrl/policies/", body);
+    String response = await _helper.post("${Consts.appDomain}/$baseUrl/policies/?state=closed", body);
     var decoded = json.decode(response);
     var list = decoded as List;
     List<INSSPolicy> policies = list.map((policy) => INSSPolicy.fromJson(policy)).toList();

@@ -118,10 +118,10 @@ class ApiBaseHelper {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
-    String? token = await getToken();
+    /*String? token = await getToken();
     if (token != null) {
       headers['Authorization'] = 'Bearer $token';
-    }
+    }*/
     return headers;
   }
 

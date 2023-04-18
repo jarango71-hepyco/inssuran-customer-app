@@ -1,9 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_remix/flutter_remix.dart';
-import 'package:get/get.dart';
+import 'package:inssurancustomer/pages/home/pdfviewer.dart';
 import '../../models/policy.dart';
-import '../../res/i_font_res.dart';
 import '../../utils/constants.dart';
 
 
@@ -64,7 +63,7 @@ class _StateDocumentsPage extends State<DocumentsPage> {
                         ),
                       ),
                       const SizedBox(height: 8,),*/
-                      _listDocuments1()
+                      _listDocuments()
                     ],
                   )
               ),
@@ -89,9 +88,9 @@ class _StateDocumentsPage extends State<DocumentsPage> {
             style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: const Color(Consts.C_PRIMARYCOLOR), decoration: TextDecoration.underline),
           ),
           onTap: () {
-            /*Navigator.push(context, MaterialPageRoute(
-              builder: (context) => PDFViewerPage(url: widget.policy!.files[index].file),
-            ),);*/
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) => PDFViewerPage(url: Consts.appDomain+widget.policy!.files[index].file),
+            ),);
           },
         );
       },

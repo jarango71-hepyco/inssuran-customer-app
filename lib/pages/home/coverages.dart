@@ -2,16 +2,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../components/common_controls.dart';
-import '../../components/route_transitions/slide_right.dart';
-import '../../models/label_function.dart';
+import '../../models/policy.dart';
 import '../../res/i_font_res.dart';
-import '../../services/app_exception.dart';
 import '../../utils/constants.dart';
-import '../Details/vehicle_detail.dart';
 
 
 class CoveragesPage extends StatefulWidget {
-  const CoveragesPage({Key? key}) : super(key: key);
+  const CoveragesPage({Key? key, required this.policy}) : super(key: key);
+  final INSSPolicy policy;
 
   @override
   State<StatefulWidget> createState() => _StateCoveragesPage();
@@ -20,10 +18,8 @@ class CoveragesPage extends StatefulWidget {
 class _StateCoveragesPage extends State<CoveragesPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool _loadingOverlay = false;
-
-  final _scrollController = ScrollController();
-  //final CoveragesController _CoveragesController = Get.find<CoveragesController>();
+    final _scrollController = ScrollController();
+    bool _loadingOverlay = false;
 
   List<String> coverages = ["Cobertura", "Ayuda", "Beneficio"];
   List<String> coveragesDetails = ["Cobertura uno para todos", "Ayuada uno para todos", "Beneficio uno para todos"];
@@ -31,21 +27,6 @@ class _StateCoveragesPage extends State<CoveragesPage> {
   @override
   void initState() {
     super.initState();
-
-    listCoverages();
-
-    _scrollController.addListener(() {
-      if (_scrollController.position.atEdge) {
-        bool isTop = _scrollController.position.pixels == 0;
-        if (isTop) {
-          listCoverages(paginated: false);
-        } else {
-          /*if (!_CoveragesController.allLoaded.value) {
-            listCoverages(paginated: true);
-          }*/
-        }
-      }
-    });
   }
 
   @override
@@ -53,41 +34,6 @@ class _StateCoveragesPage extends State<CoveragesPage> {
     super.dispose();
   }
 
-  void listCoverages({bool paginated = false}) async {
-    try {
-      setState(() {_loadingOverlay = true;});
-      //_CoveragesController.loading.value = true;
-      //await _CoveragesController.listCoverages (paginated: paginated);
-    } on BadRequestException catch (e) {
-      csDialog(context: context, text: e.message,
-          buttons: [
-            LabelFunction("ok".tr, () {
-              Navigator.of(context).pop();
-            }),
-          ]
-      );
-    } on FetchDataException {
-      csDialog(context: context, text: "ERROR_MSG_FETCH_DATA_EXCEPTION".tr,
-          buttons: [
-            LabelFunction("ok".tr, () {
-              Navigator.of(context).pop();
-            }),
-          ]
-      );
-    } on Exception {
-      csDialog(context: context, text: "Coverages_ERROR_MSG".tr,
-          buttons: [
-            LabelFunction("ok".tr, () {
-              Navigator.of(context).pop();
-            }),
-          ]);
-    } finally {
-      setState(() {_loadingOverlay = false;});
-      //_CoveragesController.loading.value = false;
-      //_CoveragesController.scrollLoading.value = false;
-      //_CoveragesController.update();
-    }
-  }
 
   Widget _listCoverages() {
     return Expanded(
@@ -96,16 +42,14 @@ class _StateCoveragesPage extends State<CoveragesPage> {
         controller: _scrollController,
         shrinkWrap: true,
         itemExtent: 55,
-        //itemCount: _CoveragesController.Coverages.length,
-        itemCount: coverages.length,
+        itemCount: widget.policy?.coverages.length,
         itemBuilder: (context, index) {
           return ListTile(
             dense: true,
             leading: CircleAvatar(
               radius: 20,
               backgroundColor: const Color(Consts.C_AVATAR),
-              //child: Text(_CoveragesController.Coverages[index].brand[0].toUpperCase(),
-              child: Text(coverages[index][0].toUpperCase(),
+              child: Text(widget.policy.coverages[index].coverage_type_name[0].toUpperCase(),
                 style: const TextStyle(
                   fontFamily: FontRes.GILROYLIGHT,
                   fontSize: 18,
@@ -114,7 +58,7 @@ class _StateCoveragesPage extends State<CoveragesPage> {
                 ),
               ),
             ),
-            title: Text(coverages[index],
+            title: Text(widget.policy.coverages[index].coverage_type_name,
             //title: Text("${_CoveragesController.Coverages[index].brand} ${_CoveragesController.Coverages[index].model} - ${_CoveragesController.Coverages[index].year}",
               style: const TextStyle(
                 fontFamily: FontRes.GILROYLIGHT,
@@ -123,8 +67,7 @@ class _StateCoveragesPage extends State<CoveragesPage> {
                 color: Color(Consts.C_PRIMARYCOLOR),
               ),
             ),
-            //subtitle: Text("${_CoveragesController.Coverages[index].plate} | ${_CoveragesController.Coverages[index].owner.name}",
-            subtitle: Text(coveragesDetails[index],
+            subtitle: Text("${"limit".tr}: ${widget.policy.coverages[index].amount_limit} | ${"percentage".tr}: ${widget.policy.coverages[index].amount_percentage}",
               style: const TextStyle(
                 fontFamily: FontRes.GILROYLIGHT,
                 fontSize: 13,
@@ -144,23 +87,15 @@ class _StateCoveragesPage extends State<CoveragesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return csLoadingOverlay(
-      loading: _loadingOverlay,
-      offset: 150,
-      child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 10,),
-              //if (_CoveragesController.Coverages.isNotEmpty)
-                _listCoverages(),
-              /*if (_CoveragesController.Coverages.isEmpty && !_CoveragesController.loading.value)
-                Center(
-                  child: csEmptyList("noitems".tr),
-                ),*/
-            ],
-          ),
-        )
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        children: <Widget>[
+          const SizedBox(height: 10,),
+          //if (_CoveragesController.Coverages.isNotEmpty)
+            _listCoverages(),
+        ],
+      ),
     );
   }
 }

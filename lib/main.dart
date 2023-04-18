@@ -8,13 +8,10 @@ import 'package:inssurancustomer/res/i_font_res.dart';
 import 'package:inssurancustomer/utils/Messages.dart';
 
 import '../../utils/constants.dart';
-import 'controllers/contractors.dart';
-import 'controllers/insureds.dart';
-import 'controllers/payments.dart';
+import 'controllers/historical.dart';
 import 'controllers/policies.dart';
 import 'controllers/providers.dart';
 import 'controllers/user.dart';
-import 'controllers/vehicles.dart';
 import 'pages/landing.dart';
 
 void main() async {
@@ -107,10 +104,7 @@ class GlobalBindings extends Bindings {
   void dependencies() {
     Get.put<UserController>(UserController());
     Get.put<PoliciesController>(PoliciesController());
-    Get.put<InsuredsController>(InsuredsController());
-    Get.put<ContractorsController>(ContractorsController());
-    Get.put<VehiclesController>(VehiclesController());
-    Get.put<PaymentsController>(PaymentsController());
+    Get.put<HistoricalsController>(HistoricalsController());
     Get.put<ProvidersController>(ProvidersController());
   }
 }

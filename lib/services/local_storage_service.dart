@@ -8,7 +8,7 @@ class LocalStorageService {
   static const String SHP_LOGGED_IN = "loggedIn";
   static const String SHP_JWT = "JWT";
   static const String HAS_SESSION = "hasSession";
-  static const String SHP_USER_INFO = "userInfo";
+  static const String SHP_USER_INFO = "userInfoCustomer";
   static const String SHR_LANGUAGE = "LANGUAGE";
 
   static Future<void> setLoggedIn(bool loggedIn) async {

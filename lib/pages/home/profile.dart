@@ -1,10 +1,13 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_remix/flutter_remix.dart';
 import 'package:get/get.dart';
 import 'package:inssurancustomer/pages/home/profile_edit.dart';
+import 'package:flutter_remix/flutter_remix.dart';
 import '../../components/common_controls.dart';
+import '../../components/drawer.dart';
 import '../../components/route_transitions/slide_right.dart';
+import '../../controllers/user.dart';
+import '../../models/user.dart';
 import '../../res/i_font_res.dart';
 import '../../utils/constants.dart';
 
@@ -18,10 +21,17 @@ class ProfilePage extends StatefulWidget {
 
 class _StateProfilePage extends State<ProfilePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final UserController _userController = Get.find<UserController>();
+  late User? _user;
 
   @override
   void initState() {
     super.initState();
+    _user = _userController.user;
+  }
+
+  Future<void> initialization() async {
+    _user = _userController.user;
   }
 
   @override
@@ -47,18 +57,33 @@ class _StateProfilePage extends State<ProfilePage> {
     );
   }
 
+  List<Widget> _buildActions() {
+    return <Widget>[
+      IconButton(
+        icon: const Icon(
+          FlutterRemix.more_2_fill,
+          color: Color(Consts.C_WHITECOLOR),
+        ),
+        onPressed: () {
+
+        },
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
-    double radius = 6.0;
-    double height = 100;
-    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: const Color(Consts.C_PRIMARYCOLOR),
         title: _buildTitle(context),
-        //actions: _buildActions(),
+        leading: IconButton(
+          icon: const Icon(FlutterRemix.menu_line),
+          onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+        ),
       ),
+      drawer: buildDrawer(context),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -67,10 +92,10 @@ class _StateProfilePage extends State<ProfilePage> {
             children: <Widget>[
               const SizedBox(height: 10,),
 
-              const Center(
+              Center(
                 //widget.customer.name
-                child: Text("Hector Curbelo Barrio",
-                  style: TextStyle(
+                child: Text(_user!.name,
+                  style: const TextStyle(
                     fontFamily: FontRes.GILROYLIGHT,
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
@@ -191,7 +216,7 @@ class _StateProfilePage extends State<ProfilePage> {
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: Colors.black,
                             fontWeight: FontWeight.w600),
                       ),
-                      subtitle: Text("1756501704",
+                      subtitle: Text(_user!.identification,
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: const Color(Consts.C_PRIMARYCOLOR)),
                       ),
                     ),
@@ -202,7 +227,7 @@ class _StateProfilePage extends State<ProfilePage> {
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: Colors.black,
                             fontWeight: FontWeight.w600),
                       ),
-                      subtitle: Text("hcurbelo@gmail.com",
+                      subtitle: Text(_user!.email,
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: const Color(Consts.C_PRIMARYCOLOR)),
                       ),
                     ),
@@ -213,41 +238,7 @@ class _StateProfilePage extends State<ProfilePage> {
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: Colors.black,
                             fontWeight: FontWeight.w600),
                       ),
-                      subtitle: Text("+593 99 523 0554",
-                        style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: const Color(Consts.C_PRIMARYCOLOR)),
-                      ),
-                    ),
-                    ListTile(
-                      dense: true,
-                      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                      title: Text("gender".tr,
-                        style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: Colors.black,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: Text("Masculino",
-                        style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: const Color(Consts.C_PRIMARYCOLOR)),
-                      ),
-                    ),
-                    ListTile(
-                      dense: true,
-                      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                      contentPadding: const EdgeInsets.only(top: 0.0, bottom: 0.0, left: 16, ),
-                      title: Text("age".tr,
-                        style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: Colors.black,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: Text("24",
-                        style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: const Color(Consts.C_PRIMARYCOLOR)),
-                      ),
-                    ),
-                    ListTile(
-                      dense: true,
-                      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                      title: Text("birthday".tr,
-                        style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: Colors.black,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: Text("24/02/1999",
+                      subtitle: Text(_user!.phone,
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: const Color(Consts.C_PRIMARYCOLOR)),
                       ),
                     ),
@@ -258,7 +249,7 @@ class _StateProfilePage extends State<ProfilePage> {
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: Colors.black,
                             fontWeight: FontWeight.w600),
                       ),
-                      subtitle: Text("Pichincha",
+                      subtitle: Text(_user!.province_name,
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: const Color(Consts.C_PRIMARYCOLOR)),
                       ),
                     ),
@@ -269,7 +260,7 @@ class _StateProfilePage extends State<ProfilePage> {
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: Colors.black,
                             fontWeight: FontWeight.w600),
                       ),
-                      subtitle: Text("Quito",
+                      subtitle: Text(_user!.city_name,
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: const Color(Consts.C_PRIMARYCOLOR)),
                       ),
                     ),
@@ -280,7 +271,7 @@ class _StateProfilePage extends State<ProfilePage> {
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: Colors.black,
                             fontWeight: FontWeight.w600),
                       ),
-                      subtitle: Text("Fernández Salvador OE844 y AV Mariscal Sucre",
+                      subtitle: Text(_user!.street,
                         style: Theme.of(Consts.navState.currentContext!).textTheme.headline3!.copyWith(color: const Color(Consts.C_PRIMARYCOLOR)),
                       ),
                     ),
@@ -294,10 +285,12 @@ class _StateProfilePage extends State<ProfilePage> {
                     label: "editprofile".tr,
                     //width: MediaQuery.of(context).size.width - 5,
                     textColor: Colors.white.withOpacity(0.8),
-                    onTap: () {
-                      Navigator.push(context, SlideRightRoute(page: const ProfileEditPage(),
+                    onTap: () async {
+                      await Navigator.push(context, SlideRightRoute(page: const ProfileEditPage(),
                           routeSettings: const RouteSettings(name: "ProfileEditPage")));
-                    }, width: MediaQuery.of(context).size.width
+                      setState(() {});
+                    },
+                    width: MediaQuery.of(context).size.width
                 ),
               ),
             ],

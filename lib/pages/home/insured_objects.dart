@@ -12,7 +12,8 @@ import '../../utils/constants.dart';
 import 'coverages.dart';
 
 class InsuredObjectsPage extends StatefulWidget {
-  const InsuredObjectsPage({Key? key, required INSSPolicy policy}) : super(key: key);
+  const InsuredObjectsPage({Key? key, required this.policy}) : super(key: key);
+  final INSSPolicy policy;
 
   @override
   InsuredObjectsPageState createState() => InsuredObjectsPageState();
@@ -65,7 +66,7 @@ class InsuredObjectsPageState extends State<InsuredObjectsPage> with SingleTicke
   Widget _buildTitle(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      child: Text("${"policy".tr} - 00011", textAlign: TextAlign.center,
+      child: Text("${"policy".tr} - ${widget.policy.policy_number}", textAlign: TextAlign.center,
         style: Theme.of(Consts.navState.currentContext!).textTheme.headline2!.copyWith(color: const Color(Consts.C_WHITECOLOR)),
       ),
     );
@@ -124,10 +125,10 @@ class InsuredObjectsPageState extends State<InsuredObjectsPage> with SingleTicke
             changePage(index);
           }
         },
-        children: const <Widget>[
-          RepresentativePage(),
-          DocumentsPage(policy: null,),
-          CoveragesPage(),
+        children: <Widget>[
+          RepresentativePage(policy: widget.policy),
+          DocumentsPage(policy: widget.policy),
+          CoveragesPage(policy: widget.policy),
         ],
       ),
     );

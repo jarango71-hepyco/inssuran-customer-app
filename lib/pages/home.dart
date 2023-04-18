@@ -43,10 +43,10 @@ class HomePageState extends State<HomePage> {
     /*if (language == "en") {
       locale = const Locale('en','US');
     }*/
-    if (!mounted) return;
-    setState(() {
+    //if (!mounted) return;
+    /*setState(() {
       //Get.updateLocale(locale);
-    });
+    });*/
   }
 
   @override

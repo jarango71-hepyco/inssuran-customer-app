@@ -42,15 +42,15 @@ class LoginPageState extends State<LoginPage> {
 
     _Ident = TextEditingController(text: "");
     _PIN = TextEditingController(text: "");
-    _Ident.text = "";
-    _PIN.text = "";
+    //_Ident.text = "1756251086";
+    //_PIN.text = "1086";
     _loadingOverlay = false;
   }
 
   @override
   void dispose() {
-    //_Ident.dispose();
-    //_PIN.dispose();
+    _Ident.dispose();
+    _PIN.dispose();
     super.dispose();
   }
 
@@ -109,19 +109,19 @@ class LoginPageState extends State<LoginPage> {
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold),
                           ),
-                          Text(Consts.S_WELCOME3,
+                          /*Text(Consts.S_WELCOME3,
                             style: TextStyle(
                               fontFamily: FontRes.AVENIRROMAN,
                               color: Colors.white.withOpacity(0.8),
                               fontSize: 9,
                               //    fontStyle: FontStyle.italic
                             ),
-                          ),
+                          ),*/
                           Text(Consts.S_WELCOME4,
                             style: TextStyle(
                                 fontFamily: FontRes.AVENIRHEAVY,
                                 color: Colors.white.withOpacity(0.8),
-                                fontSize: 26,
+                                fontSize: 32,
                                 fontWeight: FontWeight.bold),
                           ),
                           //const SizedBox(height: 5,),
@@ -260,10 +260,10 @@ class LoginPageState extends State<LoginPage> {
                         width: MediaQuery.of(context).size.width - 25,
                         textColor: Colors.white.withOpacity(0.8),
                         onTap: () {
-                          /*if (_formKey.currentState!.validate()) {
+                          if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                             _doUserLogin();
-                          }*/
+                          }
                           _doUserLogin();
                         }
                     ),
@@ -282,7 +282,7 @@ class LoginPageState extends State<LoginPage> {
       setState(() {
         _loadingOverlay = true;
       });
-      //await _userController.login(_Ident.text, _PIN.text);
+      await _userController.login(_Ident.text, _PIN.text);
       //await LocalStorageService.createSession();
       if (!mounted) return;
       Navigator.of(context).popUntil((route) => route.isFirst);
